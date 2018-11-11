@@ -26,7 +26,6 @@ pipeline {
       steps {
         unstash 'node_modules'
         sh 'yarn test'
-        junit 'reports/**/*.xml'
       }
     }
     stage('E2E Test') {
@@ -35,9 +34,7 @@ pipeline {
         }
         steps {
             unstash 'node_modules'
-            sh 'mkdir -p reports'
             sh 'yarn e2e'
-            junit 'reports/**/*.xml'
         }
     }
     stage('Compile') {
