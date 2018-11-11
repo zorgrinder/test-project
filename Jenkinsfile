@@ -7,8 +7,48 @@ pipeline {
        }
        steps {
          sh 'yarn'
-      stash includes: 'node_modules/', name: 'node_modules'
+        stash includes: 'node_modules/', name: 'node_modules'
       }
+    }
+     stage('Lint') {
+      agent {
+        docker 'circleci/node:9.3-stretch-browsers'
+      }
+      steps {
+        unstash 'node_modules'
+        sh 'yarn lint'
+      }
+    }
+    stage('Unit Test') {
+      agent {
+        docker 'circleci/node:9.3-stretch-browsers'
+      }
+      steps {
+        unstash 'node_modules'
+        sh 'yarn test'
+        junit 'reports/**/*.xml'
+      }
+    }
+    stage('E2E Test') {
+        agent {
+            docker 'circleci/node:9.3-stretch-browsers'
+        }
+        steps {
+            unstash 'node_modules'
+            sh 'mkdir -p reports'
+            sh 'yarn e2e'
+            junit 'reports/**/*.xml'
+        }
+    }
+    stage('Compile') {
+        agent {
+            docker 'circleci/node:9.3-stretch-browsers'
+        }
+        steps {
+            unstash 'node_modules'
+            sh 'yarn build:prod'
+            stash includes: 'dist/', name: 'dist'
+        }
     }
     }
 }
