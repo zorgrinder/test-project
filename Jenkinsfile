@@ -53,6 +53,7 @@ pipeline {
     }
 
      stage('build') {
+         agent { dockerfile true }
         steps {
             unstash 'dist'
             sh ''' 
