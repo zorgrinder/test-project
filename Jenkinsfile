@@ -1,7 +1,7 @@
 pipeline {
     environment {
-    registry = “mayhemmenich/docker-test”
-    registryCredential = ‘dockerhub’
+    registry = 'mayhemmenich/docker-test'
+    registryCredential = 'dockerhub'
   }
    agent none
    stages {
